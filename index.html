@@ -1,143 +1,466 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Personal website">
-    <title>UPBenny223 | Personal Website</title>
-    <style>
-        body	
-	{
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-            color: #333;
-			padding-bottom: 60px;
-        }
-        header
-	{
-            background-color: #4CAF50;
-            color: white;
-            text-align: center;
-            padding: 1rem;
-        }
-        header h1
-	{
-            margin: 0;
-        }
-        nav
-	{
-            background-color: #333;
-            padding: 0.5rem;
-            text-align: center;
-        }
-        nav a
-	{
-            color: white;
-            text-decoration: none;
-            margin: 0 1rem;
-        }
-        nav a:hover
-	{
-            text-decoration: underline;
-        }
-        section
-	{
-            padding: 2rem;
-            margin: 0 auto;
-            max-width: 800px;
-        }
-        footer
-	{
-            background-color: #333;
-            color: white;
-            text-align: center;
-            padding: 1rem;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-			height: 60px;
-        }
-        h2
-	{
-            color: #4CAF50;
-        }
-        ul
-	{
-            list-style-type: none;
-            padding: 0;
-        }
-        ul li
-	{
-            background-color: #eee;
-            padding: 0.5rem;
-            margin: 0.5rem 0;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Personal website" />
+  <title>UPBenny223 | Personal Website</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'><rect width='128' height='128' rx='24' fill='%234c6aff'/><text x='50%' y='58%' dominant-baseline='middle' text-anchor='middle' font-family='monospace' font-size='72' fill='white'>U</text></svg>">
+  <style>
+    :root {
+      --bg: #0b0e14;          /* base background */
+      --bg-soft: #121826;     /* cards */
+      --bg-softer: #0f1420;   /* nav */
+      --text: #e5e7eb;        /* text */
+      --muted: #9aa3b2;       /* muted text */
+      --brand: #7c3aed;       /* primary */
+      --brand-2: #22d3ee;     /* accent */
+      --ok: #10b981;
+      --warn: #f59e0b;
+      --err: #ef4444;
+      --card-radius: 18px;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --glow: 0 0 0 0 rgba(124,58,237,.0);
+    }
+
+    /* Light mode (auto) */
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #f6f7fb;
+        --bg-soft: #ffffff;
+        --bg-softer: #f1f5f9;
+        --text: #111827;
+        --muted: #4b5563;
+        --shadow: 0 10px 30px rgba(3,7,18,.08);
+      }
+    }
+
+    /* Optional user toggle overrides */
+    [data-theme="light"] {
+      --bg: #f6f7fb;
+      --bg-soft: #ffffff;
+      --bg-softer: #f1f5f9;
+      --text: #111827;
+      --muted: #4b5563;
+      --shadow: 0 10px 30px rgba(3,7,18,.08);
+    }
+    [data-theme="dark"] {
+      --bg: #0b0e14;
+      --bg-soft: #121826;
+      --bg-softer: #0f1420;
+      --text: #e5e7eb;
+      --muted: #9aa3b2;
+    }
+
+    * { box-sizing: border-box }
+    html, body { height: 100% }
+    html { scroll-behavior: smooth }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      color: var(--text);
+      background: radial-gradient(1200px 600px at 10% -10%, rgba(124,58,237,.15), transparent 60%),
+                  radial-gradient(1200px 600px at 110% 10%, rgba(34,211,238,.12), transparent 60%),
+                  var(--bg);
+      line-height: 1.6;
+      overflow-x: hidden;
+      padding-bottom: 96px; /* make room for footer */
+    }
+
+    /* Subtle animated particles canvas */
+    #bg-canvas {
+      position: fixed; inset: 0; z-index: -2; display: block;
+    }
+
+    /* Header */
+    header {
+      position: relative;
+      padding: 80px 16px 60px;
+      text-align: center;
+      background: linear-gradient(180deg, rgba(124,58,237,.18), rgba(34,211,238,.08) 40%, transparent 100%);
+      overflow: clip;
+    }
+    header h1 {
+      margin: 0;
+      font-size: clamp(36px, 6vw, 68px);
+      letter-spacing: -0.02em;
+      line-height: 1.05;
+    }
+    header p {
+      margin: 14px 0 0;
+      font-size: clamp(14px, 2.3vw, 18px);
+      color: var(--muted);
+    }
+
+    .glitch {
+      position: relative; display: inline-block;
+    }
+    .glitch::before, .glitch::after {
+      content: attr(data-text);
+      position: absolute; left: 0; top: 0;
+      clip-path: inset(0 0 0 0);
+      pointer-events: none;
+      opacity: .75;
+    }
+    .glitch::before { transform: translate(1px, -1px); color: var(--brand-2); mix-blend-mode: screen }
+    .glitch::after  { transform: translate(-1px, 1px); color: var(--brand);   mix-blend-mode: screen }
+    .glitch:hover::before { animation: flicker 120ms steps(2) 6 }
+    .glitch:hover::after  { animation: flicker 120ms steps(2) 6 reverse }
+    @keyframes flicker { 50% { transform: translate(0,0) } }
+
+    /* Nav */
+    nav {
+      position: sticky; top: 0; z-index: 50;
+      display: flex; gap: 12px; justify-content: center; align-items: center;
+      background: color-mix(in lab, var(--bg-softer), transparent 12%);
+      backdrop-filter: blur(10px) saturate(1.2);
+      border-bottom: 1px solid color-mix(in lab, var(--muted), transparent 85%);
+      padding: 10px 12px;
+    }
+    nav a {
+      color: var(--text);
+      text-decoration: none;
+      padding: 8px 12px;
+      border-radius: 999px;
+      transition: transform .15s ease, background .2s ease, color .2s ease;
+      font-weight: 600;
+    }
+    nav a:hover { transform: translateY(-2px); background: color-mix(in lab, var(--brand), transparent 85%) }
+    nav a.active { background: color-mix(in lab, var(--brand), transparent 80%); box-shadow: var(--glow) }
+
+    .spacer { flex: 1 }
+    .toggle {
+      border: 1px solid color-mix(in lab, var(--muted), transparent 70%);
+      background: var(--bg-soft);
+      color: var(--text);
+      border-radius: 999px;
+      padding: 6px 12px; cursor: pointer; font-weight: 600;
+    }
+
+    main { max-width: 980px; margin: 0 auto; padding: 24px }
+
+    section { margin: 28px auto; }
+
+    .card {
+      background: var(--bg-soft);
+      border: 1px solid color-mix(in lab, var(--muted), transparent 80%);
+      border-radius: var(--card-radius);
+      padding: clamp(18px, 3vw, 28px);
+      box-shadow: var(--shadow);
+      transform: translateY(8px);
+      opacity: 0;
+      transition: transform .6s cubic-bezier(.2,.7,.2,1), opacity .6s ease;
+    }
+    .card.show { transform: translateY(0); opacity: 1 }
+
+    h2 { color: var(--brand-2); margin-top: 0; letter-spacing: .3px }
+
+    ul.clean { list-style: none; padding: 0; margin: 0 }
+    ul.clean li {
+      background: color-mix(in lab, var(--bg-softer), transparent 65%);
+      border: 1px solid color-mix(in lab, var(--muted), transparent 82%);
+      border-radius: 12px; padding: 12px 14px; margin: 10px 0;
+      display: grid; grid-template-columns: 24px 1fr; gap: 10px; align-items: center;
+    }
+    .chip { display:inline-block; font-size: 12px; padding: 2px 8px; border-radius: 999px; background: color-mix(in lab, var(--brand-2), transparent 78%); margin-left: 8px }
+
+    .projects { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px }
+    .project {
+      background: linear-gradient(180deg, color-mix(in lab, var(--bg-soft), var(--brand) 4%), color-mix(in lab, var(--bg-soft), var(--brand-2) 4%));
+      border: 1px solid color-mix(in lab, var(--muted), transparent 80%);
+      border-radius: 16px; padding: 16px; box-shadow: var(--shadow);
+      transform: perspective(800px) rotateX(0) rotateY(0);
+      transition: transform .2s ease, box-shadow .3s ease;
+    }
+    .project:hover { transform: perspective(800px) rotateX(2deg) rotateY(-2deg) translateY(-2px) }
+    .project strong { display: block; margin-bottom: 6px }
+    .project a.btn { display:inline-block; margin-top: 8px; padding: 8px 12px; border-radius: 10px; text-decoration: none; font-weight: 700; color: var(--text); border: 1px solid color-mix(in lab, var(--brand), transparent 60%) }
+    .project a.btn:hover { background: color-mix(in lab, var(--brand), transparent 80%) }
+
+    /* Toast */
+    .toast {
+      position: fixed; bottom: 92px; left: 50%; transform: translateX(-50%);
+      background: var(--bg-softer); color: var(--text);
+      border: 1px solid color-mix(in lab, var(--err), transparent 15%);
+      padding: 10px 14px; border-radius: 12px; box-shadow: var(--shadow);
+      display: none; z-index: 60;
+    }
+
+    /* Footer */
+    footer {
+      position: fixed; inset-inline: 0; bottom: 0; z-index: 40;
+      background: color-mix(in lab, var(--bg-softer), transparent 8%);
+      backdrop-filter: blur(10px) saturate(1.2);
+      color: var(--muted);
+      border-top: 1px solid color-mix(in lab, var(--muted), transparent 80%);
+    }
+    .footer-inner {
+      max-width: 980px; margin: 0 auto; padding: 14px 16px; display: flex; align-items: center; gap: 12px; justify-content: space-between;
+    }
+
+    .kbd { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12px; background: color-mix(in lab, var(--bg-softer), transparent 40%); padding: 2px 6px; border-radius: 6px; border: 1px solid color-mix(in lab, var(--muted), transparent 70%) }
+
+    /* Dialog */
+    dialog { border: none; border-radius: 16px; padding: 0; max-width: 680px; width: calc(100% - 24px); background: var(--bg-soft); color: var(--text); box-shadow: var(--shadow) }
+    dialog::backdrop { background: rgba(0,0,0,.4) }
+    .modal-head { padding: 16px 18px; border-bottom: 1px solid color-mix(in lab, var(--muted), transparent 80%); display:flex; align-items:center; justify-content: space-between }
+    .modal-body { padding: 18px }
+    .icon { width: 22px; height: 22px; display: inline-block; vertical-align: middle }
+
+    /* HM Linux (Konami) */
+    body.hml { --brand: #ff2bb3; --brand-2: #45ffce }
+    body.hml .hml-banner { position: fixed; top: 10px; right: 10px; background: linear-gradient(45deg, var(--brand), var(--brand-2)); color: #111; padding: 8px 12px; border-radius: 12px; font-weight: 900; box-shadow: var(--shadow); z-index: 70 }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      * { animation: none !important; transition: none !important }
+    }
+  </style>
 </head>
 <body>
+  <canvas id="bg-canvas" aria-hidden="true"></canvas>
 
-    <!-- Header Section -->
-    <header>
-        <h1>UPBenny223</h1>
-        <p>Welcome to my personal website</p>
-    </header>
+  <!-- Header Section -->
+  <header>
+    <h1 class="glitch" data-text="UPBenny223">UPBenny223</h1>
+    <p>Welcome to my personal website</p>
+  </header>
 
-    <!-- Navigation Menu -->
-    <nav>
-        <a href="#about">About Me</a>
-        <a href="#skills">Skills</a>
-        <a href="#projects">Projects</a>
-        <a href="#contact">Contact</a>
-    </nav>
+  <!-- Navigation Menu -->
+  <nav>
+    <a href="#about">About Me</a>
+    <a href="#skills">Skills</a>
+    <a href="#projects">Projects</a>
+    <a href="#contact">Contact</a>
+    <span class="spacer"></span>
+    <button id="themeToggle" class="toggle" aria-label="Toggle theme">🌓 Theme</button>
+  </nav>
 
+  <main>
     <!-- About Me Section -->
-    <section id="about">
-        <h2>About Me</h2>
-        <p>I sometimes write texts like the one you are reading right now, because i need something to fill this god forbidden website with.</p>
+    <section id="about" class="card">
+      <h2>About Me</h2>
+      <p>I sometimes write texts like the one you are reading right now, because i need something to fill this god forbidden website with.</p>
+      <small style="color:var(--muted)">Psst: click the title up top to increment your <span class="kbd">hello-world</span> counter.</small>
     </section>
 
     <!-- Skills Section -->
-    <section id="skills">
-        <h2>Skills</h2>
-        <ul>
-            <li>I once did a Hello World in Python. </li>
-            <li>I strictly use Hannah Montana Linux. (Yes, this is a thing) </li>
-            <li>I once did a calculator in BASIC that was able to compute the result of every calculation as Segmentation Fault.</li>
-            <li>Currently trying to remake Rollercoaster Tycoon in x86 Asm.</li>
-        </ul>
+    <section id="skills" class="card">
+      <h2>Skills</h2>
+      <ul class="clean">
+        <li>🧪 I once did a Hello World in Python. <span class="chip">prodigy</span></li>
+        <li>🐧 I strictly use Hannah Montana Linux. (Yes, this is a thing) <span class="chip">elite</span></li>
+        <li>💥 I once did a calculator in BASIC that was able to compute the result of every calculation as Segmentation Fault. <button id="segfaultBtn" class="toggle" style="padding:4px 8px; font-weight:700">run</button></li>
+        <li>🎢 Currently trying to remake Rollercoaster Tycoon in x86 Asm. <span class="chip">send help</span></li>
+      </ul>
     </section>
 
     <!-- Projects Section -->
-    <section id="projects">
-        <h2>Projects</h2>
-        <ul>
-            <li>
-                <strong>Project 1:</strong>I have perfected the usage of Python in order to print Hello World.<a href="#">View Project</a>
-            </li>
-            <li>
-                <strong>Project 2:</strong>I have perfected the usage of C in order to print Hello World.<a href="#">View Project</a>
-            </li>
-            <li>
-                <strong>Project 3:</strong>I have also mastered (= wrote Hello World in) C++, GDScript, JavaScript, System Verilog, BASIC, C#, Java and Holy C.<a href="#">View Project</a>
-            </li>
-        </ul>
+    <section id="projects" class="card">
+      <h2>Projects</h2>
+      <div class="projects">
+        <article class="project">
+          <strong>Project 1:</strong>
+          <div>I have perfected the usage of Python in order to print Hello World.</div>
+          <a class="btn" href="#">View Project</a>
+        </article>
+        <article class="project">
+          <strong>Project 2:</strong>
+          <div>I have perfected the usage of C in order to print Hello World.</div>
+          <a class="btn" href="#">View Project</a>
+        </article>
+        <article class="project">
+          <strong>Project 3:</strong>
+          <div>I have also mastered (= wrote Hello World in) C++, GDScript, JavaScript, System Verilog, BASIC, C#, Java and Holy C.</div>
+          <a class="btn" href="#">View Project</a>
+        </article>
+      </div>
     </section>
 
     <!-- Contact Section -->
-    <section id="contact">
-        <h2>Contact</h2>
-        <p>If you want to get in touch, feel free to follow me on my social media channels.</p>
-        <p>Instagram: <a href="https://www.instagram.com/benny.burghauser/">instagram.com/benny.burghauser</a></p>
-        <p>GitHub: <a href="https://github.com/UPBenny223">github.com/UPBenny223</a></p>
-
+    <section id="contact" class="card">
+      <h2>Contact</h2>
+      <p>If you want to get in touch, feel free to follow me on my social media channels.</p>
+      <p>Instagram: <a href="https://www.instagram.com/benny.burghauser/" target="_blank" rel="noopener">instagram.com/benny.burghauser</a></p>
+      <p>GitHub: <a href="https://github.com/UPBenny223" target="_blank" rel="noopener">github.com/UPBenny223</a></p>
     </section>
+  </main>
 
-    <!-- Footer -->
-    <footer>
-        <p>&copy; 2024 Benjamin Burghauser. All rights reserved.</p>
-    </footer>
+  <!-- Footer -->
+  <footer>
+    <div class="footer-inner">
+      <div>
+        <span>&copy; <span id="year"></span> Benjamin Burghauser. All rights reserved.</span>
+      </div>
+      <div style="display:flex; gap:10px; align-items:center">
+        <span class="kbd">? </span><small>Help</small>
+        <span class="kbd">↑↑↓↓←→←→BA</span><small>Surprise</small>
+      </div>
+    </div>
+  </footer>
 
+  <div id="toast" role="status" aria-live="polite" class="toast">Segmentation fault (core dumped)</div>
+
+  <!-- Modal: Help / Shortcuts -->
+  <dialog id="helpDialog">
+    <div class="modal-head"><strong>Quick tips</strong><button class="toggle" id="closeHelp" aria-label="Close">Close</button></div>
+    <div class="modal-body">
+      <ul>
+        <li>Press <span class="kbd">?</span> to open this help.</li>
+        <li>Enter the <span class="kbd">Konami code</span> anywhere on the page to toggle <em>Hannah Montana Linux Mode</em>.</li>
+        <li>Click the header title to increment your personal <span class="kbd">Hello World</span> counter (stored locally).</li>
+        <li>Prefer fewer animations? Enable reduced motion in your OS or tap the Theme button to switch vibes.</li>
+      </ul>
+    </div>
+  </dialog>
+
+  <script>
+    // ===== Utilities
+    const $ = (sel, root=document) => root.querySelector(sel);
+    const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
+
+    // ===== Theme toggle & persistence
+    const themeKey = 'upbenny-theme';
+    const savedTheme = localStorage.getItem(themeKey);
+    if (savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
+    $('#themeToggle').addEventListener('click', () => {
+      const current = document.documentElement.getAttribute('data-theme');
+      const next = current === 'light' ? 'dark' : (current === 'dark' ? '' : 'light');
+      if (next) document.documentElement.setAttribute('data-theme', next); else document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem(themeKey, next);
+    });
+
+    // ===== Smooth scroll offset for sticky nav
+    $$('nav a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        const id = a.getAttribute('href').slice(1);
+        const target = document.getElementById(id);
+        if (!target) return;
+        const y = target.getBoundingClientRect().top + window.scrollY - 70;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      });
+    });
+
+    // ===== Active nav on scroll
+    const sections = ['about','skills','projects','contact'].map(id => document.getElementById(id));
+    const navLinks = $$('nav a');
+    const io = new IntersectionObserver(entries => {
+      for (const e of entries) {
+        if (e.isIntersecting) {
+          navLinks.forEach(l => l.classList.toggle('active', l.getAttribute('href').slice(1) === e.target.id));
+          e.target.classList.add('show'); // reveal card
+        }
+      }
+    }, { rootMargin: '-50% 0px -40% 0px', threshold: 0 });
+    sections.forEach(s => io.observe(s));
+
+    // ===== Dynamic year
+    $('#year').textContent = new Date().getFullYear();
+
+    // ===== Header counter Easter egg
+    const counterKey = 'hello-world-count';
+    const h1 = $('header h1');
+    const updateTitle = () => {
+      const n = Number(localStorage.getItem(counterKey) || '0');
+      h1.title = `Hello World printed: ${n}`;
+    };
+    updateTitle();
+    h1.addEventListener('click', () => {
+      const n = Number(localStorage.getItem(counterKey) || '0') + 1;
+      localStorage.setItem(counterKey, String(n));
+      updateTitle();
+      h1.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.05)' }, { transform: 'scale(1)' }], { duration: 250 });
+    });
+
+    // ===== Segfault gag
+    const toast = $('#toast');
+    $('#segfaultBtn').addEventListener('click', () => {
+      toast.style.display = 'block';
+      toast.textContent = 'Segmentation fault (core dumped)';
+      toast.animate([{ transform: 'translateY(10px)', opacity: 0 }, { transform: 'translateY(0)', opacity: 1 }], { duration: 180, easing: 'ease-out' });
+      setTimeout(() => toast.style.display = 'none', 1800);
+    });
+
+    // ===== Help dialog
+    const help = $('#helpDialog');
+    const closeHelp = $('#closeHelp');
+    document.addEventListener('keydown', (e) => {
+      if (e.key === '?') {
+        help.showModal();
+      } else if (e.key === 'Escape' && help.open) {
+        help.close();
+      }
+    });
+    closeHelp.addEventListener('click', () => help.close());
+
+    // ===== Konami code => Hannah Montana Linux mode
+    const konami = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+    let idx = 0; let banner;
+    window.addEventListener('keydown', (e) => {
+      const key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+      if (key === konami[idx]) {
+        idx++;
+        if (idx === konami.length) {
+          document.body.classList.toggle('hml');
+          if (!banner) {
+            banner = document.createElement('div');
+            banner.className = 'hml-banner';
+            banner.textContent = 'Hannah Montana Linux MODE';
+            document.body.appendChild(banner);
+          } else {
+            banner.remove(); banner = null;
+          }
+          idx = 0;
+        }
+      } else {
+        idx = 0;
+      }
+    });
+
+    // ===== Particles background (cheap)
+    const cvs = document.getElementById('bg-canvas');
+    const ctx = cvs.getContext('2d');
+    const particles = []; const maxP = 85;
+    const rm = matchMedia('(prefers-reduced-motion: reduce)');
+
+    function resize() { cvs.width = innerWidth; cvs.height = innerHeight }
+    addEventListener('resize', resize); resize();
+
+    function spawn() {
+      particles.length = 0;
+      for (let i=0;i<maxP;i++) {
+        particles.push({
+          x: Math.random()*cvs.width,
+          y: Math.random()*cvs.height,
+          vx: (Math.random()-.5)*.25,
+          vy: (Math.random()-.5)*.25,
+          r: Math.random()*1.8 + .6,
+          a: Math.random()*0.6 + 0.2
+        });
+      }
+    }
+    spawn();
+
+    function step() {
+      if (rm.matches) return; // no animation if reduced motion
+      ctx.clearRect(0,0,cvs.width,cvs.height);
+      ctx.globalCompositeOperation = 'lighter';
+      for (const p of particles) {
+        p.x += p.vx; p.y += p.vy;
+        if (p.x < 0) p.x = cvs.width; if (p.x > cvs.width) p.x = 0;
+        if (p.y < 0) p.y = cvs.height; if (p.y > cvs.height) p.y = 0;
+        const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r*6);
+        g.addColorStop(0, `rgba(124,58,237,${p.a})`);
+        g.addColorStop(1, 'transparent');
+        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(p.x, p.y, p.r*6, 0, Math.PI*2); ctx.fill();
+      }
+      requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+
+    // ===== Progressive reveal of cards on load (in case above IO not fired)
+    setTimeout(() => $$('.card').forEach((c,i)=>setTimeout(()=>c.classList.add('show'), 150*i)), 100);
+  </script>
 </body>
 </html>
