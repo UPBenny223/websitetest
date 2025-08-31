@@ -23,7 +23,6 @@
       --glow: 0 0 0 0 rgba(124,58,237,.0);
     }
 
-    /* Light mode (auto) */
     @media (prefers-color-scheme: light) {
       :root {
         --bg: #f6f7fb;
@@ -35,7 +34,6 @@
       }
     }
 
-    /* Optional user toggle overrides */
     [data-theme="light"] {
       --bg: #f6f7fb;
       --bg-soft: #ffffff;
@@ -64,15 +62,13 @@
                   var(--bg);
       line-height: 1.6;
       overflow-x: hidden;
-      padding-bottom: 96px; /* make room for footer */
+      padding-bottom: 96px; 
     }
 
-    /* Subtle animated particles canvas */
     #bg-canvas {
       position: fixed; inset: 0; z-index: -2; display: block;
     }
 
-    /* Header */
     header {
       position: relative;
       padding: 80px 16px 60px;
@@ -108,7 +104,7 @@
     .glitch:hover::after  { animation: flicker 120ms steps(2) 6 reverse }
     @keyframes flicker { 50% { transform: translate(0,0) } }
 
-    /* Nav */
+
     nav {
       position: sticky; top: 0; z-index: 50;
       display: flex; gap: 12px; justify-content: center; align-items: center;
@@ -177,7 +173,7 @@
     .project a.btn { display:inline-block; margin-top: 8px; padding: 8px 12px; border-radius: 10px; text-decoration: none; font-weight: 700; color: var(--text); border: 1px solid color-mix(in lab, var(--brand), transparent 60%) }
     .project a.btn:hover { background: color-mix(in lab, var(--brand), transparent 80%) }
 
-    /* Toast */
+
     .toast {
       position: fixed; bottom: 92px; left: 50%; transform: translateX(-50%);
       background: var(--bg-softer); color: var(--text);
@@ -186,7 +182,7 @@
       display: none; z-index: 60;
     }
 
-    /* Footer */
+
     footer {
       position: fixed; inset-inline: 0; bottom: 0; z-index: 40;
       background: color-mix(in lab, var(--bg-softer), transparent 8%);
@@ -200,33 +196,35 @@
 
     .kbd { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12px; background: color-mix(in lab, var(--bg-softer), transparent 40%); padding: 2px 6px; border-radius: 6px; border: 1px solid color-mix(in lab, var(--muted), transparent 70%) }
 
-    /* Dialog */
+
     dialog { border: none; border-radius: 16px; padding: 0; max-width: 680px; width: calc(100% - 24px); background: var(--bg-soft); color: var(--text); box-shadow: var(--shadow) }
     dialog::backdrop { background: rgba(0,0,0,.4) }
     .modal-head { padding: 16px 18px; border-bottom: 1px solid color-mix(in lab, var(--muted), transparent 80%); display:flex; align-items:center; justify-content: space-between }
     .modal-body { padding: 18px }
     .icon { width: 22px; height: 22px; display: inline-block; vertical-align: middle }
 
-    /* HM Linux (Konami) */
+
     body.hml { --brand: #ff2bb3; --brand-2: #45ffce }
     body.hml .hml-banner { position: fixed; top: 10px; right: 10px; background: linear-gradient(45deg, var(--brand), var(--brand-2)); color: #111; padding: 8px 12px; border-radius: 12px; font-weight: 900; box-shadow: var(--shadow); z-index: 70 }
 
-    /* Reduced motion */
+
     @media (prefers-reduced-motion: reduce) {
       * { animation: none !important; transition: none !important }
     }
+    ul.clean li { justify-items: start; }
+    ul.clean li > * { justify-self: start; }
+    .chip { display: inline-flex; align-items: center; }
+    .icon { width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center }
   </style>
 </head>
 <body>
   <canvas id="bg-canvas" aria-hidden="true"></canvas>
 
-  <!-- Header Section -->
   <header>
     <h1 class="glitch" data-text="UPBenny223">UPBenny223</h1>
     <p>Welcome to my personal website</p>
   </header>
 
-  <!-- Navigation Menu -->
   <nav>
     <a href="#about">About Me</a>
     <a href="#skills">Skills</a>
@@ -237,25 +235,34 @@
   </nav>
 
   <main>
-    <!-- About Me Section -->
     <section id="about" class="card">
       <h2>About Me</h2>
       <p>I sometimes write texts like the one you are reading right now, because i need something to fill this god forbidden website with.</p>
       <small style="color:var(--muted)">Psst: click the title up top to increment your <span class="kbd">hello-world</span> counter.</small>
     </section>
 
-    <!-- Skills Section -->
     <section id="skills" class="card">
       <h2>Skills</h2>
       <ul class="clean">
-        <li>🧪 I once did a Hello World in Python. <span class="chip">prodigy</span></li>
-        <li>🐧 I strictly use Hannah Montana Linux. (Yes, this is a thing) <span class="chip">elite</span></li>
-        <li>💥 I once did a calculator in BASIC that was able to compute the result of every calculation as Segmentation Fault. <button id="segfaultBtn" class="toggle" style="padding:4px 8px; font-weight:700">run</button></li>
-        <li>🎢 Currently trying to remake Rollercoaster Tycoon in x86 Asm. <span class="chip">send help</span></li>
+        <li>
+          <span class="icon">✎</span>
+          <div>I once did a Hello World in Python. <span class="chip">prodigy</span></div>
+        </li>
+        <li>
+          <span class="icon">🐧</span>
+          <div>I strictly use Hannah Montana Linux. (Yes, this is a thing) <span class="chip">elite</span></div>
+        </li>
+        <li>
+          <span class="icon">💥</span>
+          <div>I once did a calculator in BASIC that was able to compute the result of every calculation as Segmentation Fault. <button id="segfaultBtn" class="toggle" style="padding:4px 8px; font-weight:700">run</button></div>
+        </li>
+        <li>
+          <span class="icon">🎢</span>
+          <div>Currently trying to remake Rollercoaster Tycoon in x86 Asm. <span class="chip">send help</span></div>
+        </li>
       </ul>
     </section>
 
-    <!-- Projects Section -->
     <section id="projects" class="card">
       <h2>Projects</h2>
       <div class="projects">
@@ -277,7 +284,6 @@
       </div>
     </section>
 
-    <!-- Contact Section -->
     <section id="contact" class="card">
       <h2>Contact</h2>
       <p>If you want to get in touch, feel free to follow me on my social media channels.</p>
@@ -286,7 +292,6 @@
     </section>
   </main>
 
-  <!-- Footer -->
   <footer>
     <div class="footer-inner">
       <div>
@@ -300,8 +305,7 @@
   </footer>
 
   <div id="toast" role="status" aria-live="polite" class="toast">Segmentation fault (core dumped)</div>
-
-  <!-- Modal: Help / Shortcuts -->
+  
   <dialog id="helpDialog">
     <div class="modal-head"><strong>Quick tips</strong><button class="toggle" id="closeHelp" aria-label="Close">Close</button></div>
     <div class="modal-body">
@@ -315,11 +319,10 @@
   </dialog>
 
   <script>
-    // ===== Utilities
+    
     const $ = (sel, root=document) => root.querySelector(sel);
     const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
 
-    // ===== Theme toggle & persistence
     const themeKey = 'upbenny-theme';
     const savedTheme = localStorage.getItem(themeKey);
     if (savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
@@ -330,7 +333,6 @@
       localStorage.setItem(themeKey, next);
     });
 
-    // ===== Smooth scroll offset for sticky nav
     $$('nav a[href^="#"]').forEach(a => {
       a.addEventListener('click', e => {
         e.preventDefault();
@@ -342,23 +344,20 @@
       });
     });
 
-    // ===== Active nav on scroll
     const sections = ['about','skills','projects','contact'].map(id => document.getElementById(id));
     const navLinks = $$('nav a');
     const io = new IntersectionObserver(entries => {
       for (const e of entries) {
         if (e.isIntersecting) {
           navLinks.forEach(l => l.classList.toggle('active', l.getAttribute('href').slice(1) === e.target.id));
-          e.target.classList.add('show'); // reveal card
+          e.target.classList.add('show');
         }
       }
     }, { rootMargin: '-50% 0px -40% 0px', threshold: 0 });
     sections.forEach(s => io.observe(s));
 
-    // ===== Dynamic year
     $('#year').textContent = new Date().getFullYear();
-
-    // ===== Header counter Easter egg
+    
     const counterKey = 'hello-world-count';
     const h1 = $('header h1');
     const updateTitle = () => {
@@ -373,7 +372,6 @@
       h1.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.05)' }, { transform: 'scale(1)' }], { duration: 250 });
     });
 
-    // ===== Segfault gag
     const toast = $('#toast');
     $('#segfaultBtn').addEventListener('click', () => {
       toast.style.display = 'block';
@@ -382,7 +380,6 @@
       setTimeout(() => toast.style.display = 'none', 1800);
     });
 
-    // ===== Help dialog
     const help = $('#helpDialog');
     const closeHelp = $('#closeHelp');
     document.addEventListener('keydown', (e) => {
@@ -394,7 +391,6 @@
     });
     closeHelp.addEventListener('click', () => help.close());
 
-    // ===== Konami code => Hannah Montana Linux mode
     const konami = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
     let idx = 0; let banner;
     window.addEventListener('keydown', (e) => {
@@ -418,7 +414,6 @@
       }
     });
 
-    // ===== Particles background (cheap)
     const cvs = document.getElementById('bg-canvas');
     const ctx = cvs.getContext('2d');
     const particles = []; const maxP = 85;
@@ -459,7 +454,6 @@
     }
     requestAnimationFrame(step);
 
-    // ===== Progressive reveal of cards on load (in case above IO not fired)
     setTimeout(() => $$('.card').forEach((c,i)=>setTimeout(()=>c.classList.add('show'), 150*i)), 100);
   </script>
 </body>
